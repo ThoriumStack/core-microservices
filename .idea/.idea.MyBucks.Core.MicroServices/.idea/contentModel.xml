@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\projects\mybucks\lib\MyBucks.Core.MicroServices" t="IncludeFlat">
+      <e p="MyBucks.Core.MicroServices" t="IncludeRecursive">
+        <e p="Abstractions" t="Include">
+          <e p="IServiceEndpoint.cs" t="Include" />
+        </e>
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="ConfigurationModels" t="Include">
+          <e p="CustomLoggerConfiguration.cs" t="Include" />
+          <e p="DbSettings.cs" t="Include" />
+          <e p="WebServiceSettings.cs" t="Include" />
+        </e>
+        <e p="DataSeederBase.cs" t="Include" />
+        <e p="ISeedable.cs" t="Include" />
+        <e p="IServiceRegistry.cs" t="Include" />
+        <e p="IServiceStartup.cs" t="Include" />
+        <e p="MyBucks.Core.MicroServices.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netstandard2.0" t="Include">
+              <e p="MyBucks.Core.MicroServices.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Platform" t="Include">
+          <e p="UnixSignalHandler.cs" t="Include" />
+        </e>
+        <e p="ServiceRunner.cs" t="Include" />
+        <e p="ServiceStartup.cs" t="Include" />
+      </e>
+      <e p="MyBucks.Core.MicroServices.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+    <e p="C:\Users\tjaartb\.Rider2018.1\system\resharper-host\local\Transient\ReSharperHost\v12\SolutionCaches\_MyBucks.Core.MicroServices.2137773164.00" t="ExcludeRecursive" />
+  </component>
+</project>
