@@ -12,6 +12,7 @@
           <e p="DbSettings.cs" t="Include" />
           <e p="WebServiceSettings.cs" t="Include" />
         </e>
+        <e p="CoreModelExtensions.cs" t="Include" />
         <e p="DataSeederBase.cs" t="Include" />
         <e p="ISeedable.cs" t="Include" />
         <e p="IServiceRegistry.cs" t="Include" />
@@ -28,6 +29,7 @@
         <e p="Platform" t="Include">
           <e p="UnixSignalHandler.cs" t="Include" />
         </e>
+        <e p="ServiceBase.cs" t="Include" />
         <e p="ServiceRunner.cs" t="Include" />
         <e p="ServiceStartup.cs" t="Include" />
       </e>
