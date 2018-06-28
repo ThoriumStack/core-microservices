@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using MyBucks.Core.MicroServices.Abstractions;
 using MyBucks.Core.MicroServices.ConfigurationModels;
 using Serilog;
+using Serilog.Events;
 using SimpleInjector;
 
 namespace MyBucks.Core.MicroServices
@@ -111,6 +112,7 @@ namespace MyBucks.Core.MicroServices
             _logger = new LoggerConfiguration()
                 .WriteTo.Elasticsearch()
                 .ReadFrom.Configuration(_configuration)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .WriteTo.Console(level)
                 .CreateLogger();
 
