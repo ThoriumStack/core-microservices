@@ -33,14 +33,19 @@ namespace MyBucks.Core.MicroServices
             var errorId = Guid.NewGuid();
 
             var parmList = parms?.ToList() ?? new List<object>();
-            
-            parmList.Add(errorId);
-            
-            _logger.Fatal(ex, msg, parmList);
             ReplyBase val = new TReply();
+            parmList.Add(errorId);
+            if (ex is ArgumentException)
+            {
+                val.ReplyStatus = ReplyStatus.InvalidInput;
+                val.ReplyMessage = ex.Message;
+            }
+            else
+            {
+                _logger.Fatal(ex, msg, parmList);
+                val.ReplyMessage = $"{msg} Error Id: {errorId}";
+            }
 
-            val.ReplyMessage = $"{msg} Error Id: {errorId}";
-            
             return (TReply)val;
         }
     }
