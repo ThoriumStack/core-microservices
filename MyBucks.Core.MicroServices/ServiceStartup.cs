@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
@@ -44,7 +45,7 @@ namespace MyBucks.Core.MicroServices
 
             LoadEndPoints();
 
-            _logger.Information($"Console Logging Level: {_consoleLogging.ConsoleLoggingLevel}");
+            _logger.Information($"Console Logging Level: {_consoleLogging?.ConsoleLoggingLevel ?? "Information"}");
         }
 
         private void LoadEndPoints()
@@ -56,7 +57,32 @@ namespace MyBucks.Core.MicroServices
             _container.Verify();
 
             _handlers = _container.GetAllInstances<IServiceEndpoint>().ToList();
-            _handlers.ToList().ForEach(c => c.StartServer());
+            _handlers.ToList().ForEach(TryServiceStart);
+        }
+        
+        
+        private void TryServiceStart(IServiceEndpoint c)
+        {
+            _logger.Information("Starting service endpoint {endPointName}", c.EndpointDescription);
+            try
+            {
+                c.StartServer();
+            }
+            catch (Exception ex)
+            {
+                _logger.Fatal(ex, "Unable to start service {endPointName}", c.EndpointDescription);
+            }
+        }
+
+        internal void StopServices()
+        {
+            _logger.Information("Stopping service...");
+            foreach (var handler in _handlers)
+            {
+                _logger.Information("Stopping {endpointName}", handler.EndpointDescription);
+                handler.StopServer();
+            }
+            _logger.Information("Exiting...");
         }
 
         private void InitializeContainer()
@@ -72,14 +98,6 @@ namespace MyBucks.Core.MicroServices
             _container.Register(() => _logger);
 
             _startup.RegisterServices(_container);
-        }
-
-        internal void StopServices()
-        {
-            foreach (var handler in _handlers)
-            {
-                handler.StopServer();
-            }
         }
 
         public IConfigurationRoot LoadSettings()
@@ -103,18 +121,26 @@ namespace MyBucks.Core.MicroServices
         public void ConfigureLogger()
         {
             var level = Serilog.Events.LogEventLevel.Information;
-
-            if ("Verbose".Equals(_consoleLogging.ConsoleLoggingLevel, StringComparison.InvariantCultureIgnoreCase))
+            if (_consoleLogging != null)
             {
-                level = Serilog.Events.LogEventLevel.Verbose;
+                if ("Verbose".Equals(_consoleLogging.ConsoleLoggingLevel, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    level = Serilog.Events.LogEventLevel.Verbose;
+                }
             }
 
-            _logger = new LoggerConfiguration()
-                .WriteTo.Elasticsearch()
+
+            var config = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .WriteTo.Console(level)
-                .CreateLogger();
+                .WriteTo.Console(level);
+            
+            if (!Debugger.IsAttached)
+            {
+                config.WriteTo.Elasticsearch();
+            }
+            
+            _logger = config.CreateLogger();
 
             if (_startup.GetType().IsAssignableFrom(typeof(ICustomLogging)))
             {
