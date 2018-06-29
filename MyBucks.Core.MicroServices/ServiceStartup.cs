@@ -22,7 +22,7 @@ namespace MyBucks.Core.MicroServices
         }
 
         private static Container _container;
-        private IConfigurationRoot _configuration;
+        private static IConfigurationRoot _configuration;
         private CustomLoggerConfiguration _consoleLogging;
 
         private List<IServiceEndpoint> _handlers;
@@ -85,7 +85,7 @@ namespace MyBucks.Core.MicroServices
             _logger.Information("Exiting...");
         }
 
-        private void InitializeContainer()
+        public Container InitializeContainer()
         {
             _container = new Container();
             _startup.RegisterStaticInstances(_container);
@@ -98,6 +98,7 @@ namespace MyBucks.Core.MicroServices
             _container.Register(() => _logger);
 
             _startup.RegisterServices(_container);
+            return _container;
         }
 
         public IConfigurationRoot LoadSettings()
@@ -152,6 +153,11 @@ namespace MyBucks.Core.MicroServices
         public static Container GetContainer()
         {
             return _container;
+        }
+        
+        public static IConfigurationRoot GetConfigurationRoot()
+        {
+            return _configuration;
         }
     }
 
