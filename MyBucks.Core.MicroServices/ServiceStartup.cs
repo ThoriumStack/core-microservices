@@ -27,8 +27,8 @@ namespace MyBucks.Core.MicroServices
 
         private List<IServiceEndpoint> _handlers;
 
-        private ILogger _logger;
-        private DbSettings _dbSettings;
+        private static ILogger _logger;
+        private static DbSettings _dbSettings;
 
         public void Initialize()
         {
@@ -51,10 +51,6 @@ namespace MyBucks.Core.MicroServices
         private void LoadEndPoints()
         {
             InitializeContainer();
-
-            _startup.LoadEndpoints(_container);
-
-            _container.Verify();
 
             _handlers = _container.GetAllInstances<IServiceEndpoint>().ToList();
             _handlers.ToList().ForEach(TryServiceStart);
@@ -88,17 +84,24 @@ namespace MyBucks.Core.MicroServices
         public Container InitializeContainer()
         {
             _container = new Container();
-            _startup.RegisterStaticInstances(_container);
+          
 
+            ConfigureContainer(_container);
+            _container.Verify();
+            return _container;
+        }
+
+        public void ConfigureContainer(Container container)
+        {
             if (_dbSettings != null)
             {
-                _container.Register(() => _dbSettings);
+                container.Register(() => _dbSettings);
             }
 
-            _container.Register(() => _logger);
+            container.Register(() => _logger);
 
-            _startup.RegisterServices(_container);
-            return _container;
+            _startup.ConfigureService(new ServiceConfiguration(container, _configuration));
+            
         }
 
         public IConfigurationRoot LoadSettings()
@@ -115,7 +118,6 @@ namespace MyBucks.Core.MicroServices
             };
 
             _consoleLogging = _configuration.GetSection("ConsoleLogging").Get<CustomLoggerConfiguration>();
-            _startup.LoadConfiguration(_configuration);
             return _configuration;
         }
 
@@ -159,10 +161,19 @@ namespace MyBucks.Core.MicroServices
         {
             return _configuration;
         }
-    }
 
-    public interface ICustomLogging
-    {
-        void ConfigureLogging(ILogger logger);
+        public static void ContainerSetup(Container container, IServiceStartup startup)
+        {
+            var serviceStartup = new ServiceStartup(startup);
+            
+            if (_configuration == null)
+            {
+                serviceStartup.LoadSettings();
+                serviceStartup.ConfigureLogger();
+            }
+            
+            serviceStartup.ConfigureContainer(container);
+            
+        }
     }
 }

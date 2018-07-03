@@ -1,7 +1,7 @@
 ﻿using MyBucks.Core.MicroServices.ConfigurationModels;
 using Serilog;
 
-namespace MyBucks.Core.MicroServices
+namespace MyBucks.Core.MicroServices.Abstractions
 {
     public interface ISeedable
     {

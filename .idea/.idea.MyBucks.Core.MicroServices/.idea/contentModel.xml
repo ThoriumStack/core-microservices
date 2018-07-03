@@ -4,7 +4,10 @@
     <e p="C:\projects\mybucks\lib\MyBucks.Core.MicroServices" t="IncludeFlat">
       <e p="MyBucks.Core.MicroServices" t="IncludeRecursive">
         <e p="Abstractions" t="Include">
+          <e p="ICustomLogging.cs" t="Include" />
+          <e p="ISeedable.cs" t="Include" />
           <e p="IServiceEndpoint.cs" t="Include" />
+          <e p="IServiceStartup.cs" t="Include" />
         </e>
         <e p="bin" t="ExcludeRecursive" />
         <e p="ConfigurationModels" t="Include">
@@ -12,12 +15,8 @@
           <e p="DbSettings.cs" t="Include" />
           <e p="WebServiceSettings.cs" t="Include" />
         </e>
-        <e p="ContainerExtensions.cs" t="Include" />
         <e p="CoreModelExtensions.cs" t="Include" />
         <e p="DataSeederBase.cs" t="Include" />
-        <e p="ISeedable.cs" t="Include" />
-        <e p="IServiceRegistry.cs" t="Include" />
-        <e p="IServiceStartup.cs" t="Include" />
         <e p="MyBucks.Core.MicroServices.csproj" t="IncludeRecursive" />
         <e p="NuGet.Config" t="Include" />
         <e p="obj" t="ExcludeRecursive">
@@ -31,6 +30,7 @@
           <e p="UnixSignalHandler.cs" t="Include" />
         </e>
         <e p="ServiceBase.cs" t="Include" />
+        <e p="ServiceConfiguration.cs" t="Include" />
         <e p="ServiceRunner.cs" t="Include" />
         <e p="ServiceStartup.cs" t="Include" />
       </e>
