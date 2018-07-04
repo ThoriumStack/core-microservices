@@ -31,7 +31,7 @@ namespace MyBucks.Core.MicroServices
             var typeName = typeof(TConfiguration).Name;
             if (isList)
             {
-                typeName = oType.GetGenericTypeDefinition().GenericTypeArguments.First().Name;
+                typeName = oType.GenericTypeArguments.First().Name;
             }
             
             
