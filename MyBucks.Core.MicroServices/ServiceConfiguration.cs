@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.Configuration;
 using MyBucks.Core.MicroServices.Abstractions;
 using SimpleInjector;
 
@@ -22,7 +25,16 @@ namespace MyBucks.Core.MicroServices
 
         public void AddConfiguration<TConfiguration>() where TConfiguration : class
         {
+            var oType = typeof(TConfiguration);
+            var isList =(oType.IsGenericType && (oType.GetGenericTypeDefinition() == typeof(List<>)));
+            
             var typeName = typeof(TConfiguration).Name;
+            if (isList)
+            {
+                typeName = oType.GetGenericTypeDefinition().GenericTypeArguments.First().Name;
+            }
+            
+            
             
             _container.Register(() => _configRoot.GetSection(typeName).Get<TConfiguration>());
         }
