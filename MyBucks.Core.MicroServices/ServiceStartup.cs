@@ -112,10 +112,7 @@ namespace MyBucks.Core.MicroServices
 
             _configuration = builder.Build();
 
-            _dbSettings = new DbSettings
-            {
-                ConnectionString = _configuration.GetSection("ConnectionStrings")["DefaultConnection"]
-            };
+          
 
             _consoleLogging = _configuration.GetSection("ConsoleLogging").Get<CustomLoggerConfiguration>();
             return _configuration;
