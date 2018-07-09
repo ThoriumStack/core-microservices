@@ -12,8 +12,8 @@ namespace MyBucks.Core.MicroServices
 {
     public class DataSeederBase
     {
-        private DbContext _context;
-        private ILogger _logger;
+        private readonly DbContext _context;
+        private readonly ILogger _logger;
 
         protected DataSeederBase(ILogger logger, DbContext context)
         {
