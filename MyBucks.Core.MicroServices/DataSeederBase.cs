@@ -14,11 +14,13 @@ namespace MyBucks.Core.MicroServices
     {
         private readonly DbContext _context;
         private readonly ILogger _logger;
+        private readonly string _seedDataPath;
 
-        protected DataSeederBase(ILogger logger, DbContext context)
+        protected DataSeederBase(ILogger logger, DbContext context, string seedDataPath)
         {
             _context = context;
             _logger = logger;
+            _seedDataPath = seedDataPath;
         }
 
         protected void SeedCollectionFromCsv<TSeedType, TEntityType>() where TEntityType : class where TSeedType : new()
@@ -40,7 +42,7 @@ namespace MyBucks.Core.MicroServices
 
             var transport = new LocalFileTransport
             {
-                FilePath = Path.Combine(Directory.GetCurrentDirectory(), "DataSeeds", $"{typeof(TEntityType).Name}.csv")
+                FilePath = Path.Combine(_seedDataPath, "DataSeeds", $"{typeof(TEntityType).Name}.csv")
             };
             var integrator = new Integrator();
             integrator.ReceiveData(builder, transport);
