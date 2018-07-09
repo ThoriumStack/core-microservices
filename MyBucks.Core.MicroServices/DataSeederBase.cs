@@ -5,8 +5,6 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using MyBucks.Core.DataIntegration;
 using MyBucks.Core.DataIntegration.Transports;
-using MyBucks.Core.DataProvider;
-using MyBucks.Core.MicroServices.ConfigurationModels;
 using MyBucks.Core.Serializers.CsvSerializer;
 using Serilog;
 
@@ -17,7 +15,7 @@ namespace MyBucks.Core.MicroServices
         private DbContext _context;
         private ILogger _logger;
 
-        protected DataSeederBase(DbSettings dbSettings, ILogger logger, DbContext context)
+        protected DataSeederBase(ILogger logger, DbContext context)
         {
             _context = context;
             _logger = logger;
