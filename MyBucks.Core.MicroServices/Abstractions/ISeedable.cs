@@ -1,10 +1,11 @@
-﻿using MyBucks.Core.MicroServices.ConfigurationModels;
+﻿using System.Collections.Generic;
+using MyBucks.Core.MicroServices.ConfigurationModels;
 using Serilog;
 
 namespace MyBucks.Core.MicroServices.Abstractions
 {
     public interface ISeedable
     {
-        void SeedData(DbSettings databaseSettings, ILogger logger);
+        void SeedData(List<DbSettings> databaseSettings, ILogger logger);
     }
 }

@@ -28,7 +28,7 @@ namespace MyBucks.Core.MicroServices
         private List<IServiceEndpoint> _handlers;
 
         private static ILogger _logger;
-        private static DbSettings _dbSettings;
+        private static List<DbSettings> _dbSettings;
 
         public void Initialize()
         {
@@ -112,8 +112,7 @@ namespace MyBucks.Core.MicroServices
 
             _configuration = builder.Build();
 
-          
-
+            _dbSettings = _configuration.GetSection("DbSettings").Get<List<DbSettings>>();
             _consoleLogging = _configuration.GetSection("ConsoleLogging").Get<CustomLoggerConfiguration>();
             return _configuration;
         }
