@@ -8,7 +8,7 @@ namespace MyBucks.Core.MicroServices
 {
     public abstract class ServiceBase
     {
-        private ILogger _logger;
+        private readonly ILogger _logger;
 
         protected ServiceBase(ILogger logger)
         {

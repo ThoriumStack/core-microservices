@@ -48,7 +48,7 @@ namespace MyBucks.Core.MicroServices
             _logger.Information($"{typeof(TEntityType).Name} Table Empty. Seeding...");
             var config = new MapperConfiguration(cfg => { cfg.CreateMap<TSeedType, TEntityType>(); });
 
-            IMapper iMapper = config.CreateMapper();
+            var iMapper = config.CreateMapper();
             dbSet.AddRange(lst.Select(c => iMapper.Map<TSeedType, TEntityType>(c)));
             _context.SaveChanges();
             _logger.Information($"Seeding {typeof(TEntityType).Name} table completed succesfully!");

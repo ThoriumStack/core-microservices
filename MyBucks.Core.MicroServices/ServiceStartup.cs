@@ -14,7 +14,7 @@ namespace MyBucks.Core.MicroServices
 {
     public class ServiceStartup
     {
-        private IServiceStartup _startup;
+        private readonly IServiceStartup _startup;
 
         public ServiceStartup(IServiceStartup startup)
         {
