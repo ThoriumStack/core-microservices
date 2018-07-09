@@ -97,6 +97,8 @@ namespace MyBucks.Core.MicroServices
             {
                 container.Register(() => _dbSettings);
             }
+            
+            container.Register(() =>_configuration);
 
             container.Register(() => _logger);
 
@@ -127,7 +129,6 @@ namespace MyBucks.Core.MicroServices
                     level = Serilog.Events.LogEventLevel.Verbose;
                 }
             }
-
 
             var config = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)
