@@ -119,6 +119,8 @@ namespace MyBucks.Core.MicroServices
             return _configuration;
         }
 
+        public static List<DbSettings> DbSettings => _dbSettings;
+
         public void ConfigureLogger()
         {
             var level = Serilog.Events.LogEventLevel.Information;
