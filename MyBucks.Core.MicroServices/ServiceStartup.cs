@@ -133,6 +133,9 @@ namespace MyBucks.Core.MicroServices
             var config = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel.Override("System", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
+                .Enrich.FromLogContext()
                 .WriteTo.Console(level);
             
             if (!Debugger.IsAttached)
