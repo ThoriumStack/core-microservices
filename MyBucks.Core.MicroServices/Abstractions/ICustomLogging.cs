@@ -7,6 +7,6 @@ namespace MyBucks.Core.MicroServices.Abstractions
     /// </summary>
     public interface ICustomLogging
     {
-        void ConfigureLogging(ILogger logger);
+        void ConfigureLogging(LoggerConfiguration logger);
     }
 }

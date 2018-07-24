@@ -133,8 +133,7 @@ namespace MyBucks.Core.MicroServices
             var config = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                .MinimumLevel.Override("System", LogEventLevel.Warning)
-                .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
+                
                 .Enrich.FromLogContext()
                 .WriteTo.Console(level);
             
@@ -143,13 +142,14 @@ namespace MyBucks.Core.MicroServices
                 config.WriteTo.Elasticsearch();
             }
             
-            _logger = config.CreateLogger();
+            
 
             if (_startup.GetType().IsAssignableFrom(typeof(ICustomLogging)))
             {
                 var loggingConfig = _startup as ICustomLogging;
-                loggingConfig?.ConfigureLogging(_logger);
+                loggingConfig?.ConfigureLogging(config);
             }
+            _logger = config.CreateLogger();
         }
 
         public static Container GetContainer()
