@@ -26,8 +26,8 @@ namespace MyBucks.Core.MicroServices.Repositories
             _logger = logger;
         }
 
-        private int _currentUserId;
-        public int CurrentUserId
+        private string _currentUserId;
+        public string CurrentUserId
         {
             get => _currentUserId;
             set

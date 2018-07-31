@@ -20,8 +20,8 @@ namespace MyBucks.Core.MicroServices.Services
             _repositories = repository;
         }
 
-        private int _currentUserId;
-        public int CurrentUserId
+        private string _currentUserId;
+        public string CurrentUserId
         {
             get => _currentUserId;
             set

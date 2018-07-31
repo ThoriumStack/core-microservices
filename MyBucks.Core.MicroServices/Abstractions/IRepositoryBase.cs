@@ -11,7 +11,7 @@ namespace MyBucks.Core.MicroServices.Abstractions
 {
     public interface IRepositoryBase
     {
-        int CurrentUserId { get; set; }
+        string CurrentUserId { get; set; }
         string CurrentContext { get; set; }
         ContextBase Context { get; set; }
 
