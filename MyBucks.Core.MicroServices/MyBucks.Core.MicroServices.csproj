@@ -10,9 +10,9 @@
     <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
     <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
     <PackageReference Include="MyBucks.Core.DataIntegration" Version="1.0.17" />
-    <PackageReference Include="MyBucks.Core.DataProvider" Version="1.0.26" />
+    <PackageReference Include="MyBucks.Core.DataProvider" Version="1.0.28" />
     <PackageReference Include="MyBucks.Core.Defensive" Version="1.0.3" />
-    <PackageReference Include="MyBucks.Core.Model" Version="1.0.23" />
+    <PackageReference Include="MyBucks.Core.Model" Version="1.0.26" />
     <PackageReference Include="MyBucks.Core.Serializers.CsvSerializer" Version="1.0.3" />
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="2.6.1" />

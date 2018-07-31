@@ -1,18 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using MyBucks.Core.MicroServices.Abstractions;
 using MyBucks.Core.Model;
+using MyBucks.Core.Model.Abstractions;
 using Serilog;
 
-namespace MyBucks.Core.MicroServices
+namespace MyBucks.Core.MicroServices.Services
 {
-    public abstract class ServiceBase
+    public abstract class ServiceBase : IServiceBase
     {
         private readonly ILogger _logger;
+        private readonly IRepositoryBase[] _repositories;
 
-        protected ServiceBase(ILogger logger)
+        protected ServiceBase(ILogger logger, params IRepositoryBase[] repository)
         {
             _logger = logger;
+            _repositories = repository;
+        }
+
+        private int _currentUserId;
+        public int CurrentUserId
+        {
+            get => _currentUserId;
+            set
+            {
+                _currentUserId = value;
+                foreach (var repositoryBase in _repositories)
+                {
+                    repositoryBase.CurrentUserId = _currentUserId;
+                }
+            }
+        }
+
+        private string _currentContext;
+
+        public string CurrentContext
+        {
+            get => _currentContext;
+            set
+            {
+                _currentContext = value;
+                foreach (var repositoryBase in _repositories)
+                {
+                    repositoryBase.CurrentContext = _currentContext;
+                };
+            }
         }
         
         protected T ReplyFromFatal<T>(Exception ex, string msg) where T : ReplyBase, new()
