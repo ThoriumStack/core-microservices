@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using MyBucks.Core.MicroServices.Abstractions;
 using MyBucks.Core.MicroServices.ConfigurationModels;
+using MyBucks.Core.MicroServices.Mappers;
 using Serilog;
 using Serilog.Events;
 using SimpleInjector;
@@ -29,6 +32,8 @@ namespace MyBucks.Core.MicroServices
 
         private static ILogger _logger;
         private static List<DbSettings> _dbSettings;
+        private static IMapper _defaultMapper;
+        private static IMapperFactory _mapperFactory;
 
         public void Initialize()
         {
@@ -37,6 +42,7 @@ namespace MyBucks.Core.MicroServices
             Console.WriteLine($"Framework: {appInfo.RuntimeFramework.FullName}");
             LoadSettings();
             ConfigureLogger();
+            ConfigureMapper();
 
             if (_startup is ISeedable seedable)
             {
@@ -101,6 +107,9 @@ namespace MyBucks.Core.MicroServices
             container.Register(() =>_configuration);
 
             container.Register(() => _logger);
+            
+            container.Register(() => _defaultMapper, Lifestyle.Singleton);
+            container.Register(() => _mapperFactory, Lifestyle.Singleton);
 
             _startup.ConfigureService(new ServiceConfiguration(container, _configuration));
             
@@ -172,10 +181,41 @@ namespace MyBucks.Core.MicroServices
             {
                 serviceStartup.LoadSettings();
                 serviceStartup.ConfigureLogger();
+                serviceStartup.ConfigureMapper();
             }
             
             serviceStartup.ConfigureContainer(container);
             
+        }
+
+        public void ConfigureMapper()
+        {
+            // Assume we have multiple Profile classes.  We'll load them individually to create multiple mappers for our factory
+            var mapperFactory = new MapperFactory();
+            IMapper defaultMapper = null;
+            var assembly = this.GetType().GetTypeInfo().Assembly;
+            var types = assembly.GetTypes().Where(x => x.GetTypeInfo().IsClass && x.IsAssignableFrom(x) && x.GetTypeInfo().BaseType == typeof(Profile)).ToList();
+            foreach (var type in types)
+            {
+                var profileName = string.Empty;
+                var config = new AutoMapper.MapperConfiguration(cfg =>
+                {
+                    var profile = (Profile)Activator.CreateInstance(type);
+                    profileName = profile.ProfileName;
+                    cfg.AddProfile(profile);
+                });
+ 
+                var mapper = config.CreateMapper();
+                mapperFactory.Mappers.Add(profileName, mapper);
+ 
+                // If we still want normal functionality with a default injected IMapper
+                if (defaultMapper == null)
+                {
+                    defaultMapper = mapper;
+                }
+            }
+
+            _mapperFactory = mapperFactory;
         }
     }
 }
