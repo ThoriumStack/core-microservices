@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using MyBucks.Core.MicroServices.Abstractions;
 using MyBucks.Core.Model;
 using MyBucks.Core.Model.Abstractions;
@@ -13,11 +12,16 @@ namespace MyBucks.Core.MicroServices.Services
     {
         private readonly ILogger _logger;
         private readonly IRepositoryBase[] _repositories;
+        private readonly IServiceBase[] _services;
 
-        protected ServiceBase(ILogger logger, params IRepositoryBase[] repository)
+        protected ServiceBase(ILogger logger, params IRepositoryBase[] repositories) : this (logger, null, repositories)
+        { }
+
+        protected ServiceBase(ILogger logger, IServiceBase[] services, params IRepositoryBase[] repositories)
         {
             _logger = logger;
-            _repositories = repository;
+            _repositories = repositories;
+            _services = services;
         }
 
         private string _currentUserId;
@@ -27,10 +31,8 @@ namespace MyBucks.Core.MicroServices.Services
             set
             {
                 _currentUserId = value;
-                foreach (var repositoryBase in _repositories)
-                {
-                    repositoryBase.CurrentUserId = _currentUserId;
-                }
+                _repositories?.ToList().ForEach(x => x.CurrentUserId = _currentUserId);
+                _services?.ToList().ForEach(x => x.CurrentUserId = _currentUserId);
             }
         }
 
@@ -42,10 +44,8 @@ namespace MyBucks.Core.MicroServices.Services
             set
             {
                 _currentContext = value;
-                foreach (var repositoryBase in _repositories)
-                {
-                    repositoryBase.CurrentContext = _currentContext;
-                };
+                _repositories?.ToList().ForEach(x => x.CurrentContext = _currentContext);
+                _services?.ToList().ForEach(x => x.CurrentContext = _currentContext);
             }
         }
         
