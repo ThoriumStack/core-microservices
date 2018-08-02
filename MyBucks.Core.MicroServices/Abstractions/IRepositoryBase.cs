@@ -13,7 +13,7 @@ namespace MyBucks.Core.MicroServices.Abstractions
     {
         string CurrentUserId { get; set; }
         string CurrentContext { get; set; }
-        ContextBase Context { get; set; }
+        ContextBase CurrentDbContext { get; set; }
 
         event EventHandler<PreFilterEventArgs> PreFilter;
         
@@ -23,7 +23,9 @@ namespace MyBucks.Core.MicroServices.Abstractions
 
         ISelect<TModel> Select<TModel>() where TModel : BaseModel;
         ISelect<TModel> SelectNoTracking<TModel>() where TModel : BaseModel;
-        
+
+        TDto GetAs<TModel, TDto>(int id) where TModel : BaseModel where TDto : IBaseDtoModel;
+        Task<TDto> GetAsAsync<TModel, TDto>(int id) where TModel : BaseModel where TDto : IBaseDtoModel;
         TModel Get<TModel>(int id) where TModel : BaseModel;
         Task<TModel> GetAsync<TModel>(int id) where TModel : BaseModel;
         

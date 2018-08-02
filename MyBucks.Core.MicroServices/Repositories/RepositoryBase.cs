@@ -12,6 +12,7 @@ using Serilog;
 using MyBucks.Core.MicroServices.Abstractions;
 using MyBucks.Core.Model.Abstractions;
 using MyBucks.Core.Model.DataModel;
+using MyBucks.Core.MicroServices.Mappers;
 
 namespace MyBucks.Core.MicroServices.Repositories
 {
@@ -33,7 +34,8 @@ namespace MyBucks.Core.MicroServices.Repositories
             set
             {
                 _currentUserId = value;
-                Context.CurrentUserId = _currentUserId;
+                if (CurrentDbContext != null)
+                    CurrentDbContext.CurrentUserId = _currentUserId;
             }
         }
 
@@ -45,11 +47,12 @@ namespace MyBucks.Core.MicroServices.Repositories
             set
             {
                 _currentContext = value;
-                Context.CurrentContext = _currentContext;
+                if (CurrentDbContext != null)
+                    CurrentDbContext.CurrentContext = _currentContext;
             }
         }
         
-        public virtual ContextBase Context { get; set; }
+        public virtual ContextBase CurrentDbContext { get; set; }
 
         public event EventHandler<PreFilterEventArgs> PreFilter = delegate { };
         
@@ -63,18 +66,29 @@ namespace MyBucks.Core.MicroServices.Repositories
         
         public ISelect<TModel> Select<TModel>() where TModel : BaseModel
         {
-            var e = RaisePreFilterEvent(Context.Set<TModel>());
+            var e = RaisePreFilterEvent(CurrentDbContext.Set<TModel>());
 
             return new Select<TModel>(e.Filtered.Cast<TModel>());
         }
         
         public ISelect<TModel> SelectNoTracking<TModel>() where TModel : BaseModel
         {
-            var e = RaisePreFilterEvent(Context.Set<TModel>().AsNoTracking());
+            var e = RaisePreFilterEvent(CurrentDbContext.Set<TModel>().AsNoTracking());
 
             return new Select<TModel>(e.Filtered.Cast<TModel>());
         }
-        
+
+        public TDto GetAs<TModel, TDto>(int id) where TModel : BaseModel where TDto : IBaseDtoModel
+        {
+            var model = Select<TModel>().SingleOrDefault(m => m.Id == id);
+            return To<TDto>(model);
+        }
+
+        public Task<TDto> GetAsAsync<TModel, TDto>(int id) where TModel : BaseModel where TDto : IBaseDtoModel
+        {
+            return _mapper.MapAsync<TModel, TDto>(GetAsync<TModel>(id));
+        }
+
         public TModel Get<TModel>(int id) where TModel : BaseModel
         {
             return Select<TModel>().SingleOrDefault(x => x.Id == id);
@@ -87,37 +101,37 @@ namespace MyBucks.Core.MicroServices.Repositories
 
         public void Insert<TModel>(TModel model) where TModel : BaseModel
         {
-            Context.Set<TModel>().Add(model);
+            CurrentDbContext.Set<TModel>().Add(model);
         }
         
         public Task InsertAsync<TModel>(TModel model) where TModel : BaseModel
         {
-            return Context.Set<TModel>().AddAsync(model);
+            return CurrentDbContext.Set<TModel>().AddAsync(model);
         }
         
         public void InsertRange<TModel>(IEnumerable<TModel> models) where TModel : BaseModel
         {
-            Context.Set<TModel>().AddRange(models);
+            CurrentDbContext.Set<TModel>().AddRange(models);
         }
         
         public Task InsertRangeAsync<TModel>(IEnumerable<TModel> models) where TModel : BaseModel
         {
-            return Context.Set<TModel>().AddRangeAsync(models);
+            return CurrentDbContext.Set<TModel>().AddRangeAsync(models);
         }
 
         public void Delete<TModel>(int id) where TModel : BaseModel
         {
-            Delete(Context.Set<TModel>().Find(id));
+            Delete(CurrentDbContext.Set<TModel>().Find(id));
         }
 
         public void Delete<TModel>(TModel model) where TModel : BaseModel
         {
-            Context.Set<TModel>().Remove(model);
+            CurrentDbContext.Set<TModel>().Remove(model);
         }
 
         public void DeleteRange<TModel>(IEnumerable<TModel> models) where TModel : BaseModel
         {
-            Context.Set<TModel>().RemoveRange(models);
+            CurrentDbContext.Set<TModel>().RemoveRange(models);
         }
         
         /// <summary>
@@ -130,12 +144,12 @@ namespace MyBucks.Core.MicroServices.Repositories
 
         public TDestination To<TDestination>(object source) => _mapper.Map<TDestination>(source);
         
-        public int SaveChanges() => Context.SaveChanges();
+        public int SaveChanges() => CurrentDbContext.SaveChanges();
 
         public Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken()) =>
-            Context.SaveChangesAsync(cancellationToken);
+            CurrentDbContext.SaveChangesAsync(cancellationToken);
 
         public Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken()) =>
-            Context.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+            CurrentDbContext.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using MyBucks.Core.MicroServices.Abstractions;
 using MyBucks.Core.MicroServices.ConfigurationModels;
 using MyBucks.Core.MicroServices.Mappers;
+using MyBucks.Core.Model.Abstractions;
 using Serilog;
 using Serilog.Events;
 using SimpleInjector;
@@ -107,9 +108,11 @@ namespace MyBucks.Core.MicroServices
             container.Register(() =>_configuration);
 
             container.Register(() => _logger);
-            
+
             container.Register(() => _defaultMapper, Lifestyle.Singleton);
             container.Register(() => _mapperFactory, Lifestyle.Singleton);
+
+            _container.Collection.Register(typeof(IServiceBase), typeof(IServiceBase).Assembly);
 
             _startup.ConfigureService(new ServiceConfiguration(container, _configuration));
             
@@ -192,7 +195,6 @@ namespace MyBucks.Core.MicroServices
         {
             // Assume we have multiple Profile classes.  We'll load them individually to create multiple mappers for our factory
             var mapperFactory = new MapperFactory();
-            IMapper defaultMapper = null;
             var assembly = this.GetType().GetTypeInfo().Assembly;
             var types = assembly.GetTypes().Where(x => x.GetTypeInfo().IsClass && x.IsAssignableFrom(x) && x.GetTypeInfo().BaseType == typeof(Profile)).ToList();
             foreach (var type in types)
@@ -209,9 +211,9 @@ namespace MyBucks.Core.MicroServices
                 mapperFactory.Mappers.Add(profileName, mapper);
  
                 // If we still want normal functionality with a default injected IMapper
-                if (defaultMapper == null)
+                if (_defaultMapper == null)
                 {
-                    defaultMapper = mapper;
+                    _defaultMapper = mapper;
                 }
             }
 
