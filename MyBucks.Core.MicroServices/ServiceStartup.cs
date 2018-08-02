@@ -9,7 +9,6 @@ using Microsoft.Extensions.Configuration;
 using MyBucks.Core.MicroServices.Abstractions;
 using MyBucks.Core.MicroServices.ConfigurationModels;
 using MyBucks.Core.MicroServices.Mappers;
-using MyBucks.Core.Model.Abstractions;
 using Serilog;
 using Serilog.Events;
 using SimpleInjector;
@@ -111,8 +110,6 @@ namespace MyBucks.Core.MicroServices
 
             container.Register(() => _defaultMapper, Lifestyle.Singleton);
             container.Register(() => _mapperFactory, Lifestyle.Singleton);
-
-            _container.Collection.Register(typeof(IServiceBase), typeof(IServiceBase).Assembly);
 
             _startup.ConfigureService(new ServiceConfiguration(container, _configuration));
             

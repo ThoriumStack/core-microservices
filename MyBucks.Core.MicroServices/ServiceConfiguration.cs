@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using MyBucks.Core.MicroServices.Abstractions;
+using MyBucks.Core.Model.Abstractions;
 using SimpleInjector;
 
 namespace MyBucks.Core.MicroServices
@@ -42,6 +43,11 @@ namespace MyBucks.Core.MicroServices
         public void Inject<TInterface, TService>() where TInterface : class where TService : class, TInterface
         {
             _container.Register<TInterface, TService>();
+        }
+
+        public void InjectServiceBase()
+        {
+            _container.Collection.Register(typeof(IServiceBase), typeof(IServiceBase).Assembly);
         }
     }
 }
