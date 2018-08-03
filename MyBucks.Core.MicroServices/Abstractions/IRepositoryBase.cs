@@ -34,6 +34,9 @@ namespace MyBucks.Core.MicroServices.Abstractions
         
         void InsertRange<TModel>(IEnumerable<TModel> models) where TModel : BaseModel;
         Task InsertRangeAsync<TModel>(IEnumerable<TModel> models) where TModel : BaseModel;
+
+        void Update<TModel>(TModel model) where TModel : BaseModel;
+        void UpdateRange<TModel>(IEnumerable<TModel> models) where TModel : BaseModel;
         
         void Delete<TModel>(int id) where TModel : BaseModel;
         void Delete<TModel>(TModel model) where TModel : BaseModel;

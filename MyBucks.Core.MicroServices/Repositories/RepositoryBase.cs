@@ -113,10 +113,23 @@ namespace MyBucks.Core.MicroServices.Repositories
         {
             CurrentDbContext.Set<TModel>().AddRange(models);
         }
-        
+
         public Task InsertRangeAsync<TModel>(IEnumerable<TModel> models) where TModel : BaseModel
         {
             return CurrentDbContext.Set<TModel>().AddRangeAsync(models);
+        }
+        
+        public void Update<TModel>(TModel model) where TModel : BaseModel
+        {
+            CurrentDbContext.Entry<TModel>(model).State = EntityState.Modified;
+        }
+        
+        public void UpdateRange<TModel>(IEnumerable<TModel> models) where TModel : BaseModel
+        {
+            foreach (var model in models)
+            {
+                Update<TModel>(model);
+            }
         }
 
         public void Delete<TModel>(int id) where TModel : BaseModel
