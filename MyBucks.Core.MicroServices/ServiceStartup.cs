@@ -25,7 +25,7 @@ namespace MyBucks.Core.MicroServices
         }
 
         private static Container _container;
-        private static IConfigurationRoot _configuration;
+        private static IConfiguration _configuration;
         private CustomLoggerConfiguration _consoleLogging;
 
         private List<IServiceEndpoint> _handlers;
@@ -109,7 +109,7 @@ namespace MyBucks.Core.MicroServices
             
         }
 
-        public IConfigurationRoot LoadSettings()
+        public IConfiguration LoadSettings()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -162,7 +162,7 @@ namespace MyBucks.Core.MicroServices
             return _container;
         }
         
-        public static IConfigurationRoot GetConfigurationRoot()
+        public static IConfiguration GetConfigurationRoot()
         {
             return _configuration;
         }

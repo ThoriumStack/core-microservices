@@ -25,6 +25,9 @@ namespace MyBucks.Core.MicroServices.Repositories
             else
                 context = Activator.CreateInstance<TDbContext>();
             
+            context.CurrentContext = CurrentContext;
+            context.CurrentUserId = CurrentUserId;
+            
             CurrentDbContext = context;
             return context;
         }

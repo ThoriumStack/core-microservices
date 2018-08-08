@@ -15,9 +15,9 @@ namespace MyBucks.Core.MicroServices
     public class ServiceConfiguration
     {
         private readonly Container _container;
-        private readonly IConfigurationRoot _configRoot;
+        private readonly IConfiguration _configRoot;
 
-        internal ServiceConfiguration(Container container, IConfigurationRoot configRoot)
+        internal ServiceConfiguration(Container container, IConfiguration configRoot)
         {
             _container = container;
             _configRoot = configRoot;
