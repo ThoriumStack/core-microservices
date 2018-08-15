@@ -54,11 +54,12 @@ namespace MyBucks.Core.MicroServices
             _container.Collection.Register(typeof(IServiceBase), typeof(IServiceBase).Assembly);
         }
 
-        public void InjectAutoMapper(Assembly currentAssembly)
+        public void InjectAutoMapper()
         {
             // Assume we have multiple Profile classes.  We'll load them individually to create multiple mappers for our factory
             var mapperFactory = new MapperFactory();
             IMapper defaultMapper = null;
+            var currentAssembly = Assembly.GetEntryAssembly();
             var types = currentAssembly.GetTypes().Where(x => x.GetTypeInfo().IsClass && x.IsAssignableFrom(x) && x.GetTypeInfo().BaseType == typeof(Profile)).ToList();
             foreach (var type in types)
             {
