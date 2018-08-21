@@ -64,18 +64,18 @@ namespace MyBucks.Core.MicroServices.Repositories
             return e;
         }
         
-        public ISelect<TModel> Select<TModel>() where TModel : BaseModel
+        public IQueryable<TModel> Select<TModel>() where TModel : BaseModel
         {
             var e = RaisePreFilterEvent(CurrentDbContext.Set<TModel>());
 
-            return new Select<TModel>(e.Filtered.Cast<TModel>());
+            return new Select<TModel>(_mapper, e.Filtered.Cast<TModel>());
         }
         
-        public ISelect<TModel> SelectNoTracking<TModel>() where TModel : BaseModel
+        public IQueryable<TModel> SelectNoTracking<TModel>() where TModel : BaseModel
         {
             var e = RaisePreFilterEvent(CurrentDbContext.Set<TModel>().AsNoTracking());
 
-            return new Select<TModel>(e.Filtered.Cast<TModel>());
+            return new Select<TModel>(_mapper, e.Filtered.Cast<TModel>());
         }
 
         public TDto GetAs<TModel, TDto>(int id) where TModel : BaseModel where TDto : IBaseDtoModel

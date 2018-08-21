@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MyBucks.Core.DataProvider;
@@ -21,8 +22,8 @@ namespace MyBucks.Core.MicroServices.Abstractions
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken());
         Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken());
 
-        ISelect<TModel> Select<TModel>() where TModel : BaseModel;
-        ISelect<TModel> SelectNoTracking<TModel>() where TModel : BaseModel;
+        IQueryable<TModel> Select<TModel>() where TModel : BaseModel;
+        IQueryable<TModel> SelectNoTracking<TModel>() where TModel : BaseModel;
 
         TDto GetAs<TModel, TDto>(int id) where TModel : BaseModel where TDto : IBaseDtoModel;
         Task<TDto> GetAsAsync<TModel, TDto>(int id) where TModel : BaseModel where TDto : IBaseDtoModel;
