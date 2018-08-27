@@ -137,7 +137,7 @@ namespace MyBucks.Core.MicroServices
 
             var config = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)
                 
                 .Enrich.FromLogContext()
                 .WriteTo.Console(level);

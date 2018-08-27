@@ -5,7 +5,11 @@
       <e p="MyBucks.Core.MicroServices" t="IncludeRecursive">
         <e p="Abstractions" t="Include">
           <e p="ICustomLogging.cs" t="Include" />
+          <e p="IGenericRepositoryBase.cs" t="Include" />
+          <e p="IMapperFactory.cs" t="Include" />
+          <e p="IRepositoryBase.cs" t="Include" />
           <e p="ISeedable.cs" t="Include" />
+          <e p="ISelect.cs" t="Include" />
           <e p="IServiceEndpoint.cs" t="Include" />
           <e p="IServiceStartup.cs" t="Include" />
         </e>
@@ -17,6 +21,11 @@
         </e>
         <e p="CoreModelExtensions.cs" t="Include" />
         <e p="DataSeederBase.cs" t="Include" />
+        <e p="Mappers" t="Include">
+          <e p="MapperExtensions.cs" t="Include" />
+          <e p="MapperFactory.cs" t="Include" />
+          <e p="MappingProfile.cs" t="Include" />
+        </e>
         <e p="MyBucks.Core.MicroServices.csproj" t="IncludeRecursive" />
         <e p="NuGet.Config" t="Include" />
         <e p="obj" t="ExcludeRecursive">
@@ -29,9 +38,19 @@
         <e p="Platform" t="Include">
           <e p="UnixSignalHandler.cs" t="Include" />
         </e>
-        <e p="ServiceBase.cs" t="Include" />
+        <e p="Repositories" t="Include">
+          <e p="ContextRepositoryBase.cs" t="Include" />
+          <e p="GenericContextRepositoryBase.cs" t="Include" />
+          <e p="GenericRepositoryBase.cs" t="Include" />
+          <e p="PreFilterEventArgs.cs" t="Include" />
+          <e p="RepositoryBase.cs" t="Include" />
+          <e p="Select.cs" t="Include" />
+        </e>
         <e p="ServiceConfiguration.cs" t="Include" />
         <e p="ServiceRunner.cs" t="Include" />
+        <e p="Services" t="Include">
+          <e p="ServiceBase.cs" t="Include" />
+        </e>
         <e p="ServiceStartup.cs" t="Include" />
       </e>
       <e p="MyBucks.Core.MicroServices.sln" t="IncludeFlat" />
