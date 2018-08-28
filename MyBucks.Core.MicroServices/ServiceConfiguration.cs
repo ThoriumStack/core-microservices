@@ -64,7 +64,8 @@ namespace MyBucks.Core.MicroServices
         /// <typeparam name="TConfiguration"></typeparam>
         public void AddConfiguration<TConfiguration>(Func<IConfiguration, TConfiguration> configure) where TConfiguration : class
         {
-            _container.Register(() => configure(_configRoot));
+            var config = configure(_configRoot);
+            _container.Register(() => config);
         }
 
         public void Inject<TInterface, TService>() where TInterface : class where TService : class, TInterface
