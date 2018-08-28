@@ -28,6 +28,11 @@ namespace MyBucks.Core.MicroServices
             _container.Collection.Append<IServiceEndpoint, TEndpoint>();            
         }
 
+        
+        /// <summary>
+        /// Add a configuration element. The typename must match with the key in appsettings.json
+        /// </summary>
+        /// <typeparam name="TConfiguration"></typeparam>
         public void AddConfiguration<TConfiguration>() where TConfiguration : class
         {
             var oType = typeof(TConfiguration);
@@ -39,9 +44,27 @@ namespace MyBucks.Core.MicroServices
                 typeName = oType.GenericTypeArguments.First().Name;
             }
             
-            
-            
             _container.Register(() => _configRoot.GetSection(typeName).Get<TConfiguration>());
+        }
+        
+        /// <summary>
+        /// Get a configuration object based on a section key.
+        /// </summary>
+        /// <param name="sectionKey"></param>
+        /// <typeparam name="TConfiguration"></typeparam>
+        public void AddConfiguration<TConfiguration>(string sectionKey) where TConfiguration : class
+        {
+            _container.Register(() => _configRoot.GetSection(sectionKey).Get<TConfiguration>());
+        }
+        
+        /// <summary>
+        /// Add a custom configuration. Get access to the .net Configuration Root.
+        /// </summary>
+        /// <param name="configure"></param>
+        /// <typeparam name="TConfiguration"></typeparam>
+        public void AddConfiguration<TConfiguration>(Func<IConfiguration, TConfiguration> configure) where TConfiguration : class
+        {
+            _container.Register(() => configure(_configRoot));
         }
 
         public void Inject<TInterface, TService>() where TInterface : class where TService : class, TInterface
