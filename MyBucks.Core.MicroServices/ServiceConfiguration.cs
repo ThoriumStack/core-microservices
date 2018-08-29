@@ -72,6 +72,14 @@ namespace MyBucks.Core.MicroServices
         {
             _container.Register<TInterface, TService>();
         }
+        
+        public void Inject<TInterface, TService>(Lifestyle lifestyle) where TInterface : class where TService : class, TInterface
+        {
+            
+            _container.Register<TInterface, TService>(lifestyle);
+        }
+        
+        
 
         public void InjectServiceBase()
         {
