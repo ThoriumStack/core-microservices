@@ -13,6 +13,7 @@
     <PackageReference Include="MyBucks.Core.DataProvider" Version="1.0.30" />
     <PackageReference Include="MyBucks.Core.Defensive" Version="1.0.3" />
     <PackageReference Include="MyBucks.Core.Serializers.CsvSerializer" Version="1.0.3" />
+    <PackageReference Include="Polly" Version="6.1.0" />
     <PackageReference Include="Serilog" Version="2.7.1" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="2.6.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
