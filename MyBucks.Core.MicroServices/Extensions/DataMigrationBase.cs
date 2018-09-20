@@ -18,7 +18,7 @@ namespace MyBucks.Core.MicroServices.Extensions
             {
                 logger.Information($"Migrating database associated with context {typeof(TDbContext).Name}");
 
-                var settingsKey = typeof(TDbContext).Name.Substring(0, typeof(TDbContext).Name.IndexOf("Db"));
+                var settingsKey = typeof(TDbContext).Name.Substring(0, typeof(TDbContext).Name.IndexOf("Db") + 2);
                 
                 var dbSetting = databaseSettings.Find(c => c.Name == settingsKey);
                 TDbContext context;
