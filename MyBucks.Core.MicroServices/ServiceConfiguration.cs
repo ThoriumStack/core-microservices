@@ -33,7 +33,7 @@ namespace MyBucks.Core.MicroServices
         /// Add a configuration element. The typename must match with the key in appsettings.json
         /// </summary>
         /// <typeparam name="TConfiguration"></typeparam>
-        public void AddConfiguration<TConfiguration>() where TConfiguration : class
+        public TConfiguration AddConfiguration<TConfiguration>() where TConfiguration : class
         {
             var oType = typeof(TConfiguration);
             var isList =(oType.IsGenericType && (oType.GetGenericTypeDefinition() == typeof(List<>)));
@@ -43,8 +43,11 @@ namespace MyBucks.Core.MicroServices
             {
                 typeName = oType.GenericTypeArguments.First().Name;
             }
+
+            var configItem = _configRoot.GetSection(typeName).Get<TConfiguration>();
             
-            _container.Register(() => _configRoot.GetSection(typeName).Get<TConfiguration>());
+            _container.Register(() => configItem);
+            return configItem;
         }
         
         /// <summary>
@@ -54,7 +57,8 @@ namespace MyBucks.Core.MicroServices
         /// <typeparam name="TConfiguration"></typeparam>
         public void AddConfiguration<TConfiguration>(string sectionKey) where TConfiguration : class
         {
-            _container.Register(() => _configRoot.GetSection(sectionKey).Get<TConfiguration>());
+            var configItem = _configRoot.GetSection(sectionKey).Get<TConfiguration>();
+            _container.Register(() => configItem);
         }
         
         /// <summary>
@@ -62,10 +66,11 @@ namespace MyBucks.Core.MicroServices
         /// </summary>
         /// <param name="configure"></param>
         /// <typeparam name="TConfiguration"></typeparam>
-        public void AddConfiguration<TConfiguration>(Func<IConfiguration, TConfiguration> configure) where TConfiguration : class
+        public TConfiguration AddConfiguration<TConfiguration>(Func<IConfiguration, TConfiguration> configure) where TConfiguration : class
         {
             var config = configure(_configRoot);
             _container.Register(() => config);
+            return config;
         }
 
         public void Inject<TInterface, TService>() where TInterface : class where TService : class, TInterface
@@ -78,8 +83,6 @@ namespace MyBucks.Core.MicroServices
             
             _container.Register<TInterface, TService>(lifestyle);
         }
-        
-        
 
         public void InjectServiceBase()
         {
