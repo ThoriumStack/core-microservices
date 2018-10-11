@@ -70,6 +70,7 @@ namespace MyBucks.Core.MicroServices
             catch (Exception ex)
             {
                 _logger.Fatal(ex, "Unable to start service {endPointName}", c.EndpointDescription);
+                throw ex;
             }
         }
 
