@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using AutoMapper;
+using System.Threading;
 using Microsoft.Extensions.Configuration;
 using MyBucks.Core.MicroServices.Abstractions;
 using MyBucks.Core.MicroServices.ConfigurationModels;
-using MyBucks.Core.MicroServices.Mappers;
+using MyBucks.Core.MicroServices.Redis;
 using Serilog;
-using Serilog.Events;
 using SimpleInjector;
 
 namespace MyBucks.Core.MicroServices
@@ -58,8 +56,7 @@ namespace MyBucks.Core.MicroServices
             _handlers = _container.GetAllInstances<IServiceEndpoint>().ToList();
             _handlers.ToList().ForEach(TryServiceStart);
         }
-        
-        
+
         private void TryServiceStart(IServiceEndpoint c)
         {
             _logger.Information("Starting service endpoint {endPointName}", c.EndpointDescription);
@@ -82,13 +79,13 @@ namespace MyBucks.Core.MicroServices
                 _logger.Information("Stopping {endpointName}", handler.EndpointDescription);
                 handler.StopServer();
             }
+
             _logger.Information("Exiting...");
         }
 
         public Container InitializeContainer()
         {
             _container = new Container();
-          
 
             ConfigureContainer(_container);
             _container.Verify();
@@ -101,25 +98,58 @@ namespace MyBucks.Core.MicroServices
             {
                 container.Register(() => _dbSettings);
             }
-            
-            container.Register(() =>_configuration);
+
+            container.Register(() => _configuration);
 
             container.Register(() => _logger);
 
             _startup.ConfigureService(new ServiceConfiguration(container, _configuration));
-            
+        }
+
+        private string AppSettingsLocation => $"config{Path.DirectorySeparatorChar}appsettings.json";
+
+        private RedisConfig LoadRedisSettings()
+        {
+            Console.WriteLine($"Checking whether Redis config should loaded/downloaded");
+            return new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile(AppSettingsLocation)
+                .Build()
+                .GetSection(nameof(RedisConfig)).Get<RedisConfig>();
         }
 
         public IConfiguration LoadSettings()
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("config" + Path.DirectorySeparatorChar + "appsettings.json");
+                .SetBasePath(Directory.GetCurrentDirectory());
+
+            var redis = LoadRedisSettings();
+            if (redis != null)
+            {
+                builder.AddRedisConfig(new CancellationToken(), options =>
+                {
+                    options.RedisConfig = redis;
+                    options.Path = AppSettingsLocation;
+                    options.Optional = true;
+                    options.ReloadOnChange = true;
+                    options.OnReload = () =>
+                    {
+                        Console.WriteLine($"Settings have been updated...");
+                        _logger?.Information($"Settings have been updated...");
+                        StopServices();
+
+                        Environment.Exit(0);
+                    };
+                });
+            }
+            else
+                builder.AddJsonFile(AppSettingsLocation, optional: false, reloadOnChange: true);
 
             _configuration = builder.Build();
 
             _dbSettings = _configuration.GetSection("DbSettings").Get<List<DbSettings>>();
             _consoleLogging = _configuration.GetSection("ConsoleLogging").Get<CustomLoggerConfiguration>();
+
             return _configuration;
         }
 
@@ -127,34 +157,16 @@ namespace MyBucks.Core.MicroServices
 
         public void ConfigureLogger()
         {
-            var level = Serilog.Events.LogEventLevel.Information;
-            if (_consoleLogging != null)
-            {
-                if ("Verbose".Equals(_consoleLogging.ConsoleLoggingLevel, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    level = Serilog.Events.LogEventLevel.Verbose;
-                }
-            }
-
             var config = new LoggerConfiguration()
                 .ReadFrom.Configuration(_configuration)
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Verbose)
-                
-                .Enrich.FromLogContext()
-                .WriteTo.Console(level);
-            
-            if (!Debugger.IsAttached)
-            {
-                config.WriteTo.Elasticsearch();
-            }
-            
-            
+                .Enrich.WithProperty("MicroService", Assembly.GetEntryAssembly().GetName().Name);
 
             if (_startup.GetType().IsAssignableFrom(typeof(ICustomLogging)))
             {
                 var loggingConfig = _startup as ICustomLogging;
                 loggingConfig?.ConfigureLogging(config);
             }
+
             _logger = config.CreateLogger();
         }
 
@@ -162,7 +174,7 @@ namespace MyBucks.Core.MicroServices
         {
             return _container;
         }
-        
+
         public static IConfiguration GetConfigurationRoot()
         {
             return _configuration;
@@ -171,15 +183,14 @@ namespace MyBucks.Core.MicroServices
         public static void ContainerSetup(Container container, IServiceStartup startup)
         {
             var serviceStartup = new ServiceStartup(startup);
-            
+
             if (_configuration == null)
             {
                 serviceStartup.LoadSettings();
                 serviceStartup.ConfigureLogger();
             }
-            
+
             serviceStartup.ConfigureContainer(container);
-            
         }
     }
 }
