@@ -12,6 +12,7 @@
           <e p="ICustomLogging.cs" t="Include" />
           <e p="IGenericRepositoryBase.cs" t="Include" />
           <e p="IMapperFactory.cs" t="Include" />
+          <e p="IRedisConfigurationSource.cs" t="Include" />
           <e p="IRepositoryBase.cs" t="Include" />
           <e p="ISeedable.cs" t="Include" />
           <e p="ISelect.cs" t="Include" />
@@ -21,6 +22,7 @@
         <e p="ConfigurationModels" t="Include">
           <e p="CustomLoggerConfiguration.cs" t="Include" />
           <e p="DbSettings.cs" t="Include" />
+          <e p="RedisConfig.cs" t="Include" />
           <e p="WebServiceSettings.cs" t="Include" />
         </e>
         <e p="CoreModelExtensions.cs" t="Include" />
@@ -37,6 +39,15 @@
         <e p="Nuget.config" t="Include" />
         <e p="Platform" t="Include">
           <e p="UnixSignalHandler.cs" t="Include" />
+        </e>
+        <e p="Redis" t="Include">
+          <e p="ConfigQueryResult.cs" t="Include" />
+          <e p="RedisConfigurationClient.cs" t="Include" />
+          <e p="RedisConfigurationExtensions.cs" t="Include" />
+          <e p="RedisConfigurationFileParser.cs" t="Include" />
+          <e p="RedisConfigurationProvider.cs" t="Include" />
+          <e p="RedisConfigurationSource.cs" t="Include" />
+          <e p="RedisWatchExceptionContext.cs" t="Include" />
         </e>
         <e p="Repositories" t="Include">
           <e p="ContextRepositoryBase.cs" t="Include" />

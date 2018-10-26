@@ -40,7 +40,7 @@ namespace MyBucks.Core.MicroServices.Redis
             {
                 try
                 {
-                    Console.WriteLine($"Polling Redis for changes...");
+                  //  Console.WriteLine($"Polling Redis for changes...");
                     if (await HasValueChanged())
                     {
                         var previousToken = Interlocked.Exchange(ref _reloadToken, new ConfigurationReloadToken());
