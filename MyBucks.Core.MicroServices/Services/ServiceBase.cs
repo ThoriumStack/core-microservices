@@ -10,7 +10,7 @@ namespace MyBucks.Core.MicroServices.Services
 {
     public abstract class ServiceBase : IServiceBase
     {
-        private readonly ILogger _logger;
+        protected readonly ILogger _logger;
         private readonly IRepositoryBase[] _repositories;
         private readonly IServiceBase[] _services;
 
