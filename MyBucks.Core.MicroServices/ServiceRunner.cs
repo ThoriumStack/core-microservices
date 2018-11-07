@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using MyBucks.Core.MicroServices.Abstractions;
@@ -7,10 +8,15 @@ using MyBucks.Core.MicroServices.Platform;
 namespace MyBucks.Core.MicroServices
 {
     public class ServiceRunner
-    
-    
     {
         private static ServiceStartup _startUp;
+        private ServiceCommandLine _commandLineApp;
+        
+        public ServiceRunner()
+        {
+            _commandLineApp = new ServiceCommandLine(Assembly.GetExecutingAssembly().GetName().Name);
+            
+        }
 
         public void Run(IServiceStartup startClass)
         {

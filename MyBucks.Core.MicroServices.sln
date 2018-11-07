@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBucks.Core.MicroServices"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{3ED15F6A-62CC-4192-A6C2-DBAD181E417A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DummyService", "DummyService\DummyService.csproj", "{694BD39A-053C-49D9-9728-907D53A08024}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{3ED15F6A-62CC-4192-A6C2-DBAD181E417A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3ED15F6A-62CC-4192-A6C2-DBAD181E417A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3ED15F6A-62CC-4192-A6C2-DBAD181E417A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{694BD39A-053C-49D9-9728-907D53A08024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{694BD39A-053C-49D9-9728-907D53A08024}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{694BD39A-053C-49D9-9728-907D53A08024}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{694BD39A-053C-49D9-9728-907D53A08024}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

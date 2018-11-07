@@ -5,5 +5,7 @@
         void StartServer();
         void StopServer();
         string EndpointDescription { get; }
+        //bool Ready { get; }
+        
     }
 }

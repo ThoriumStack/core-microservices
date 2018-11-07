@@ -7,8 +7,10 @@ using System.Threading;
 using Microsoft.Extensions.Configuration;
 using MyBucks.Core.MicroServices.Abstractions;
 using MyBucks.Core.MicroServices.ConfigurationModels;
+using MyBucks.Core.MicroServices.Endpoints;
 using MyBucks.Core.MicroServices.Redis;
 using Serilog;
+using Serilog.Events;
 using SimpleInjector;
 
 namespace MyBucks.Core.MicroServices
@@ -30,6 +32,7 @@ namespace MyBucks.Core.MicroServices
 
         private static ILogger _logger;
         private static List<DbSettings> _dbSettings;
+        private ReadyCheckEndpoint _readyCheck;
 
         public void Initialize()
         {
@@ -54,15 +57,22 @@ namespace MyBucks.Core.MicroServices
             InitializeContainer();
 
             _handlers = _container.GetAllInstances<IServiceEndpoint>().ToList();
-            _handlers.ToList().ForEach(TryServiceStart);
+            
+            
+            _readyCheck = new ReadyCheckEndpoint();
+            _readyCheck.StartServer();
+            
+            var endpointsSucceeded = _handlers.ToList().All(TryServiceStart);
+            _readyCheck.ServiceReadyStatus = endpointsSucceeded;
         }
 
-        private void TryServiceStart(IServiceEndpoint c)
+        private bool TryServiceStart(IServiceEndpoint c)
         {
             _logger.Information("Starting service endpoint {endPointName}", c.EndpointDescription);
             try
             {
                 c.StartServer();
+                return true; // we assume synchronous starting, but maybe future readiness checks shouldn't
             }
             catch (Exception ex)
             {
@@ -73,6 +83,8 @@ namespace MyBucks.Core.MicroServices
 
         internal void StopServices()
         {
+            _readyCheck.ServiceReadyStatus = false;
+            _readyCheck.StopServer();
             _logger.Information("Stopping service...");
             foreach (var handler in _handlers)
             {
@@ -102,8 +114,10 @@ namespace MyBucks.Core.MicroServices
             container.Register(() => _configuration);
 
             container.Register(() => _logger);
-
-            _startup.ConfigureService(new ServiceConfiguration(container, _configuration));
+            var svcConfiguration = new ServiceConfiguration(container, _configuration);
+            
+            _startup.ConfigureService(svcConfiguration);
+           
         }
 
         private string AppSettingsLocation => $"config{Path.DirectorySeparatorChar}appsettings.json";
@@ -161,6 +175,13 @@ namespace MyBucks.Core.MicroServices
                 .ReadFrom.Configuration(_configuration)
                 .Enrich.WithProperty("MicroService", Assembly.GetEntryAssembly().GetName().Name);
 
+            var configPresent = _configuration.GetSection("Serilog").Value != null; 
+            
+            if (!configPresent)
+            {
+                config.WriteTo.Console(LogEventLevel.Information);
+            }
+            
             if (_startup.GetType().IsAssignableFrom(typeof(ICustomLogging)))
             {
                 var loggingConfig = _startup as ICustomLogging;
@@ -168,6 +189,10 @@ namespace MyBucks.Core.MicroServices
             }
 
             _logger = config.CreateLogger();
+            if (!configPresent)
+            {
+                _logger.Warning("This service has no logger configuration. Logging will only go to console.");
+            }
         }
 
         public static Container GetContainer()
