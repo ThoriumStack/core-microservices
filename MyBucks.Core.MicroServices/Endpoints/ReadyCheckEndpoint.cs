@@ -22,9 +22,7 @@ namespace MyBucks.Core.MicroServices.Endpoints
                 {
                     Ready = true;
                     _server.WaitForConnection();
-                    StreamWriter writer = new StreamWriter(_server);
-//                 
-                    writer.WriteLine(ServiceReadyStatus ? "0" : "1");
+                    StreamWriter writer = new StreamWriter(_server);                 
                     writer.Flush();
                     _server.Disconnect();
                 }
