@@ -1,6 +1,8 @@
+using System;
 using System.IO;
 using System.IO.Pipes;
 using System.Reflection;
+using System.Threading.Tasks;
 using MyBucks.Core.MicroServices.Abstractions;
 
 namespace MyBucks.Core.MicroServices.Endpoints
@@ -12,21 +14,24 @@ namespace MyBucks.Core.MicroServices.Endpoints
 
         public void StartServer()
         {
-            _server = new NamedPipeServerStream($"service-readiness-check:{Assembly.GetExecutingAssembly().GetName().Name}");
-            while (_running)
+            _server = new NamedPipeServerStream(
+                $"service-readiness-check:{Assembly.GetExecutingAssembly().GetName().Name}");
+            Task.Run(() =>
             {
-                Ready = true;
-                _server.WaitForConnection();
-                StreamWriter writer = new StreamWriter(_server);
-
-                // var line = reader.ReadLine();
-                writer.WriteLine(ServiceReadyStatus ? "1" : "0");
-                writer.Flush();
-                _server.Disconnect();
-            }
+                while (_running)
+                {
+                    Ready = true;
+                    _server.WaitForConnection();
+                    StreamWriter writer = new StreamWriter(_server);
+                    Console.WriteLine($"Ready check: {ServiceReadyStatus}");
+                    // var line = reader.ReadLine();
+                    writer.WriteLine(ServiceReadyStatus ? "1" : "0");
+                    writer.Flush();
+                    _server.Disconnect();
+                }
+            });
         }
-        
-        
+
 
         public void StopServer()
         {

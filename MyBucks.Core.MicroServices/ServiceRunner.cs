@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -15,11 +16,18 @@ namespace MyBucks.Core.MicroServices
         public ServiceRunner()
         {
             _commandLineApp = new ServiceCommandLine(Assembly.GetExecutingAssembly().GetName().Name);
-            
+         var rc = new ReadyCheckCli();
+            rc.ExtendCli(_commandLineApp.GetCommandLineApp());
         }
 
-        public void Run(IServiceStartup startClass)
+        public int Run(IServiceStartup startClass, string[] args)
         {
+            if (args.Any())
+            {
+                return _commandLineApp.Run(args);
+            }
+            
+            
             _startUp = new ServiceStartup(startClass);
             _startUp.Initialize();
 
@@ -41,6 +49,8 @@ namespace MyBucks.Core.MicroServices
                 Console.CancelKeyPress += Console_CancelKeyPress;
                 Thread.Sleep(Timeout.Infinite);
             }
+
+            return 0;
         }
         
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)

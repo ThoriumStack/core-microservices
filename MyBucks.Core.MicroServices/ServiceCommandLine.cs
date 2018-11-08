@@ -21,18 +21,19 @@ namespace MyBucks.Core.MicroServices
         {
             _app.Command(name, configuration, throwOnUnexpectedArg);
         }
+        
 
-        public bool Run(string[] args)
+        public int Run(string[] args)
         {
             if (args.Length == 0)
             {
-                return false;
+                return 0;
             };
 
             if (!_app.Commands.Any())
             {
                 Console.WriteLine("This service has no command line options.");
-                return false;
+                return 0;
             }
             
             _app.OnExecute(() => {
@@ -48,11 +49,18 @@ namespace MyBucks.Core.MicroServices
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
                 
+                Console.WriteLine(e.Message);
+                returnCode = 1;
+
             }
 
-            return true;
+            return returnCode;
+        }
+
+        public CommandLineApplication GetCommandLineApp()
+        {
+            return _app;
         }
     }
 }
