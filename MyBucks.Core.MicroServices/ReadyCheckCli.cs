@@ -1,10 +1,13 @@
+using System;
 using System.IO;
 using System.IO.Pipes;
 using McMaster.Extensions.CommandLineUtils;
+using MyBucks.Core.MicroServices.Abstractions;
 
 namespace MyBucks.Core.MicroServices
 {
-    public class ReadyCheckCli
+    
+    public class ReadyCheckCli: ICliExtender
     {
         public void ExtendCli(CommandLineApplication app)
         {
@@ -19,12 +22,11 @@ namespace MyBucks.Core.MicroServices
                     client.Connect();
                     var reader = new StreamReader(client);
                     var val = reader.ReadLine();
+                    Console.WriteLine(val);
                     var returnCode = 1;
                     int.TryParse(val, out returnCode);
            
                     return returnCode;
-                   
-                    
                 });
             });
         }

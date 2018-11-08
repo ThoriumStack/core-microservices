@@ -11,7 +11,9 @@ namespace DummyService
         {
             var svcRunner = new ServiceRunner();
             
-            return svcRunner.Run(new DummyStartup(), args);
+            
+            var returnCode =  svcRunner.Run(new DummyStartup(), args);
+            return returnCode;
         }
     }
 
@@ -27,7 +29,7 @@ namespace DummyService
     {
         public void StartServer()
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(60000);
         }
 
         public void StopServer()

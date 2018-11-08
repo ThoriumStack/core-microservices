@@ -24,6 +24,7 @@
       </e>
       <e p="MyBucks.Core.MicroServices" t="IncludeRecursive">
         <e p="Abstractions" t="Include">
+          <e p="ICliExtender.cs" t="Include" />
           <e p="ICustomLogging.cs" t="Include" />
           <e p="IGenericRepositoryBase.cs" t="Include" />
           <e p="IMapperFactory.cs" t="Include" />

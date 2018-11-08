@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Microsoft.EntityFrameworkCore.Internal;
 using MyBucks.Core.MicroServices.Abstractions;
 using MyBucks.Core.MicroServices.Platform;
 
@@ -15,9 +17,25 @@ namespace MyBucks.Core.MicroServices
         
         public ServiceRunner()
         {
-            _commandLineApp = new ServiceCommandLine(Assembly.GetExecutingAssembly().GetName().Name);
-         var rc = new ReadyCheckCli();
+            Init(null);
+            
+        }
+
+        private void Init(List<ICliExtender> commands)
+        {
+            _commandLineApp = new ServiceCommandLine(Assembly.GetEntryAssembly().GetName().Name);
+            var rc = new ReadyCheckCli();
             rc.ExtendCli(_commandLineApp.GetCommandLineApp());
+
+            if (commands != null && commands.Any())
+            {
+                commands.ForEach(c=>c.ExtendCli(_commandLineApp.GetCommandLineApp()));
+            }
+        }
+
+        public ServiceRunner(List<ICliExtender> commands)
+        {
+            Init(commands);
         }
 
         public int Run(IServiceStartup startClass, string[] args)
