@@ -2,6 +2,7 @@
 using System.Threading;
 using MyBucks.Core.MicroServices;
 using MyBucks.Core.MicroServices.Abstractions;
+using MyBucks.Core.MicroServices.LivenessChecks;
 
 namespace DummyService
 {
@@ -17,11 +18,18 @@ namespace DummyService
         }
     }
 
-    public class DummyStartup : IServiceStartup
+    public class DummyStartup : IServiceStartup, ICanCheckLiveness
     {
         public void ConfigureService(ServiceConfiguration configuration)
         {
             configuration.AddServiceEndpoint<DummyEndpoint>();
+          //  configuration.Inject<ILivenessCheck, DatabaseLivenessCheck<PoefDbContext>>();
+            
+        }
+
+        public void ConfigureLivenessChecks(LivenessCheckConfiguration config)
+        {
+           // config.AddCheck< DatabaseLivenessCheck<PoefDbContext>>();
         }
     }
 

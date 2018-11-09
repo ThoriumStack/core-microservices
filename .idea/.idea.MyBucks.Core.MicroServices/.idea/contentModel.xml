@@ -24,9 +24,11 @@
       </e>
       <e p="MyBucks.Core.MicroServices" t="IncludeRecursive">
         <e p="Abstractions" t="Include">
+          <e p="ICanCheckLiveness.cs" t="Include" />
           <e p="ICliExtender.cs" t="Include" />
           <e p="ICustomLogging.cs" t="Include" />
           <e p="IGenericRepositoryBase.cs" t="Include" />
+          <e p="ILivenessCheck.cs" t="Include" />
           <e p="IMapperFactory.cs" t="Include" />
           <e p="IRedisConfigurationSource.cs" t="Include" />
           <e p="IRepositoryBase.cs" t="Include" />
@@ -49,6 +51,10 @@
         <e p="Extensions" t="Include">
           <e p="DataMigrationBase.cs" t="Include" />
         </e>
+        <e p="LivenessChecks" t="Include">
+          <e p="DatabaseLivenessCheck.cs" t="Include" />
+          <e p="LivenessCheckConfiguration.cs" t="Include" />
+        </e>
         <e p="Mappers" t="Include">
           <e p="MapperExtensions.cs" t="Include" />
           <e p="MapperFactory.cs" t="Include" />
@@ -59,6 +65,7 @@
         <e p="Platform" t="Include">
           <e p="UnixSignalHandler.cs" t="Include" />
         </e>
+        <e p="RawSql.cs" t="Include" />
         <e p="ReadyCheckCli.cs" t="Include" />
         <e p="Redis" t="Include">
           <e p="ConfigQueryResult.cs" t="Include" />

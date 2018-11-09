@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using MyBucks.Core.MicroServices.Abstractions;
 using MyBucks.Core.MicroServices.ConfigurationModels;
 using MyBucks.Core.MicroServices.Endpoints;
+using MyBucks.Core.MicroServices.LivenessChecks;
 using MyBucks.Core.MicroServices.Redis;
 using Serilog;
 using Serilog.Events;
@@ -33,6 +34,7 @@ namespace MyBucks.Core.MicroServices
         private static ILogger _logger;
         private static List<DbSettings> _dbSettings;
         private ReadyCheckEndpoint _readyCheck;
+        private LivenessCheckConfiguration _liveCheckConfig;
 
         public void Initialize()
         {
@@ -48,7 +50,6 @@ namespace MyBucks.Core.MicroServices
             }
 
             LoadEndPoints();
-
             _logger.Information($"Console Logging Level: {_consoleLogging?.ConsoleLoggingLevel ?? "Information"}");
         }
 
@@ -115,6 +116,12 @@ namespace MyBucks.Core.MicroServices
 
             container.Register(() => _logger);
             var svcConfiguration = new ServiceConfiguration(container, _configuration);
+            
+            if (_startup is ICanCheckLiveness liveCheckConfig)
+            {
+                _liveCheckConfig = new LivenessCheckConfiguration(_container);
+                liveCheckConfig?.ConfigureLivenessChecks(_liveCheckConfig);
+            }
             
             _startup.ConfigureService(svcConfiguration);
            
