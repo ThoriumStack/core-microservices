@@ -116,12 +116,15 @@ namespace MyBucks.Core.MicroServices
 
             container.Register(() => _logger);
             var svcConfiguration = new ServiceConfiguration(container, _configuration);
-            
-            if (_startup is ICanCheckLiveness liveCheckConfig)
+            _liveCheckConfig = new LivenessCheckConfiguration(_container);
+            if (_startup is ICanCheckLiveness liveCheckSetup)
             {
-                _liveCheckConfig = new LivenessCheckConfiguration(_container);
-                liveCheckConfig?.ConfigureLivenessChecks(_liveCheckConfig);
+                
+                liveCheckSetup?.ConfigureLivenessChecks(_liveCheckConfig);
+                
+                
             }
+            container.Register(() => _liveCheckConfig);
             
             _startup.ConfigureService(svcConfiguration);
            
