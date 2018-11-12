@@ -190,7 +190,7 @@ namespace MyBucks.Core.MicroServices
                 .ReadFrom.Configuration(_configuration)
                 .Enrich.WithProperty("MicroService", Assembly.GetEntryAssembly().GetName().Name);
 
-            var configPresent = _configuration.GetSection("Serilog").Value != null;
+            var configPresent = _configuration.GetSection("Serilog").GetChildren().Any();
 
             if (!configPresent)
             {
