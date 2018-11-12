@@ -28,6 +28,7 @@
           <e p="ICliExtender.cs" t="Include" />
           <e p="ICustomLogging.cs" t="Include" />
           <e p="IGenericRepositoryBase.cs" t="Include" />
+          <e p="ILiveChecker.cs" t="Include" />
           <e p="ILivenessCheck.cs" t="Include" />
           <e p="IMapperFactory.cs" t="Include" />
           <e p="IRedisConfigurationSource.cs" t="Include" />
@@ -46,6 +47,7 @@
         <e p="CoreModelExtensions.cs" t="Include" />
         <e p="DataSeederBase.cs" t="Include" />
         <e p="Endpoints" t="Include">
+          <e p="LiveCheckEndpoint.cs" t="Include" />
           <e p="ReadyCheckEndpoint.cs" t="Include" />
         </e>
         <e p="Extensions" t="Include">

@@ -35,6 +35,7 @@ namespace MyBucks.Core.MicroServices
         private static List<DbSettings> _dbSettings;
         private ReadyCheckEndpoint _readyCheck;
         private LivenessCheckConfiguration _liveCheckConfig;
+        private LiveCheckEndpoint _liveCheck;
 
         public void Initialize()
         {
@@ -58,11 +59,14 @@ namespace MyBucks.Core.MicroServices
             InitializeContainer();
 
             _handlers = _container.GetAllInstances<IServiceEndpoint>().ToList();
-            
-            
+
+
             _readyCheck = new ReadyCheckEndpoint();
             _readyCheck.StartServer();
-            
+
+            _liveCheck = new LiveCheckEndpoint();
+            _liveCheck.StartServer();
+
             var endpointsSucceeded = _handlers.ToList().All(TryServiceStart);
             _readyCheck.ServiceReadyStatus = endpointsSucceeded;
         }
@@ -115,19 +119,20 @@ namespace MyBucks.Core.MicroServices
             container.Register(() => _configuration);
 
             container.Register(() => _logger);
-            var svcConfiguration = new ServiceConfiguration(container, _configuration);
-            _liveCheckConfig = new LivenessCheckConfiguration(_container);
+
+            _liveCheckConfig = new LivenessCheckConfiguration(container);
             if (_startup is ICanCheckLiveness liveCheckSetup)
             {
-                
                 liveCheckSetup?.ConfigureLivenessChecks(_liveCheckConfig);
-                
-                
             }
-            container.Register(() => _liveCheckConfig);
-            
+
+            _liveCheckConfig.Build();
+            container.Register<ILiveChecker>(() => _liveCheckConfig);
+
+            var svcConfiguration = new ServiceConfiguration(container, _configuration);
+
+
             _startup.ConfigureService(svcConfiguration);
-           
         }
 
         private string AppSettingsLocation => $"config{Path.DirectorySeparatorChar}appsettings.json";
@@ -185,13 +190,13 @@ namespace MyBucks.Core.MicroServices
                 .ReadFrom.Configuration(_configuration)
                 .Enrich.WithProperty("MicroService", Assembly.GetEntryAssembly().GetName().Name);
 
-            var configPresent = _configuration.GetSection("Serilog").Value != null; 
-            
+            var configPresent = _configuration.GetSection("Serilog").Value != null;
+
             if (!configPresent)
             {
                 config.WriteTo.Console(LogEventLevel.Information);
             }
-            
+
             if (_startup.GetType().IsAssignableFrom(typeof(ICustomLogging)))
             {
                 var loggingConfig = _startup as ICustomLogging;
