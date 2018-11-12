@@ -34,7 +34,18 @@ namespace MyBucks.Core.MicroServices.LivenessChecks
 
         public bool RunChecks()
         {
-            var result = _cont.GetAllInstances<ILivenessCheck>().All(c => c.IsLive());
+            var result = _cont.GetAllInstances<ILivenessCheck>().All(c =>
+            {
+                try
+                {
+                    return c.IsLive();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Liveness check failed: {e}");
+                    return false;
+                }
+            });
 
             return result;
         }

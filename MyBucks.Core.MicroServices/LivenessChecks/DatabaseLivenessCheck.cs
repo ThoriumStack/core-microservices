@@ -19,6 +19,8 @@ namespace MyBucks.Core.MicroServices.LivenessChecks
         public bool IsLive()
         {
 
+            
+            //Console.WriteLine(typeof(TDbContext).Name);
             var settingsKey = typeof(TDbContext).Name.Substring(0, typeof(TDbContext).Name.IndexOf("Db") + 2);
 
             var dbSetting = _databaseSettings.Find(c => c.Name == settingsKey);
