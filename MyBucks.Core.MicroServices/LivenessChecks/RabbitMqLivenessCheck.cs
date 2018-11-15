@@ -1,6 +1,7 @@
 using MyBucks.Core.MicroServices.Abstractions;
 using MyBucks.Core.MicroServices.ConfigurationModels;
 using RabbitMQ.Client;
+using SimpleInjector;
 
 namespace MyBucks.Core.MicroServices.LivenessChecks
 {
@@ -21,8 +22,10 @@ namespace MyBucks.Core.MicroServices.LivenessChecks
             factory.HostName = _rabbitMqSettings.RabbitMqHostname;
 
             IConnection conn = factory.CreateConnection();
-
-            return conn.IsOpen;
+            var open = conn.IsOpen;
+            
+            conn.Close();
+            return open;
         }
     }
 }
