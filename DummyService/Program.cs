@@ -30,6 +30,15 @@ namespace DummyService
         public void ConfigureLivenessChecks(LivenessCheckConfiguration config)
         {
            // config.AddCheck< DatabaseLivenessCheck<PoefDbContext>>();
+            config.AddCheck<ExampleLiveCheck>();
+        }
+    }
+
+    public class ExampleLiveCheck: ILivenessCheck
+    {
+        public bool IsLive()
+        {
+            return false;
         }
     }
 
