@@ -19,8 +19,8 @@
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.ElasticSearch" Version="6.5.0" />
-    <PackageReference Include="ServiceStack.Redis.Core" Version="5.4.0" />
     <PackageReference Include="SimpleInjector" Version="4.4.3" />
+    <PackageReference Include="StackExchange.Redis" Version="2.0.519" />
   </ItemGroup>
  
 </Project>

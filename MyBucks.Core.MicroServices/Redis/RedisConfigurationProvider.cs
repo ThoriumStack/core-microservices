@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Primitives;
 using MyBucks.Core.MicroServices.Abstractions;
-using ServiceStack.Redis;
+using StackExchange.Redis;
 
 namespace MyBucks.Core.MicroServices.Redis
 {
@@ -16,7 +16,8 @@ namespace MyBucks.Core.MicroServices.Redis
     {
         private readonly IRedisConfigurationSource _source;
         private readonly RedisConfigurationClient _redisConfigurationClient;
-
+        private ConnectionMultiplexer redis;
+        
         public RedisConfigurationProvider(RedisConfigurationSource source, RedisConfigurationClient client) :
             base(source)
         {
@@ -51,21 +52,25 @@ namespace MyBucks.Core.MicroServices.Redis
             // Check setting and upload
             if (_source.RedisConfig.Upload)
             {
+                if (redis == null || !redis.IsConnected)
+                {
+                    redis = ConnectionMultiplexer.Connect(_source.RedisConfig.Url);
+                }
                 Console.WriteLine($"Uploading config to Redis...");
-                var manager = new RedisManagerPool(_source.RedisConfig.Url);
-                using (var client = manager.GetClient())
+                //var manager = new RedisManagerPool(_source.RedisConfig.Url);
+                var client = redis.GetDatabase();
                 {
                     foreach (var key in _source.RedisConfig.Keys)
                     {
-                        var version = client.Get<int>($"{key}{_configValueVersionPostfix}");
+                        int.TryParse(client.StringGet($"{key}{_configValueVersionPostfix}"), out int version);
 
-                        client.Set($"{key}{_configValueVersionPostfix}", ++version);
+                        client.StringSet($"{key}{_configValueVersionPostfix}", ++version);
                         
-                        client.Remove(key);
+                        client.KeyDelete(key);
                         
                         foreach (var setting in Data)
                         {
-                            client.SetEntryInHash(key, setting.Key, setting.Value);
+                            client.HashSet(key, setting.Key, setting.Value);
                         }
                     }
                     Console.WriteLine($"Uploaded config to Redis...");

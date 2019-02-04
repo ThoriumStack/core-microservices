@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Primitives;
-using ServiceStack.Redis;
+using StackExchange.Redis;
 
 namespace MyBucks.Core.MicroServices.Redis
 {
@@ -13,6 +13,7 @@ namespace MyBucks.Core.MicroServices.Redis
         private int _lastVersion = 1;
         private RedisConfigurationSource _source;
         private string _configValueVersionPostfix = "_Version";
+        private ConnectionMultiplexer redis;
 
         private ConfigurationReloadToken _reloadToken = new ConfigurationReloadToken();
 
@@ -66,14 +67,19 @@ namespace MyBucks.Core.MicroServices.Redis
 
         private async Task<ConfigQueryResult> GetConfigValue() => await Task.Run(() =>
         {
-            var manager = new RedisManagerPool(_source.RedisConfig.Url);
-            using (var client = manager.GetClient())
+            if (redis == null || !redis.IsConnected)
+            {
+                redis = ConnectionMultiplexer.Connect(_source.RedisConfig.Url);
+            }
+
+            //var manager = new RedisManagerPool(_source.RedisConfig.Url);
+            var client = redis.GetDatabase();
             {
                 var result = new ConfigQueryResult();
 
                 foreach (var key in _source.RedisConfig.Keys)
                 {
-                    if (!client.ContainsKey(key))
+                    if (!client.KeyExists(key))
                     {
                         result.Exists = false;
                         return result;
@@ -82,8 +88,8 @@ namespace MyBucks.Core.MicroServices.Redis
                     result.Exists = true;
 
                     //result.Value = client.Get<string>(key);
-                    result.Value = client.GetAllEntriesFromHash(key);
-                    result.Version = client.Get<int>($"{key}{_configValueVersionPostfix}");
+                    result.Value = client.HashGetAll(key).ToStringDictionary();
+                    result.Version = int.Parse(client.StringGet($"{key}{_configValueVersionPostfix}"));
                 }
 
                 return result;
