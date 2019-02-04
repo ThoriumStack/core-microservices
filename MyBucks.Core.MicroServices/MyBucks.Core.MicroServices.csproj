@@ -22,6 +22,7 @@
     <PackageReference Include="Serilog.Sinks.ElasticSearch" Version="6.5.0" />
     <PackageReference Include="SimpleInjector" Version="4.4.3" />
     <PackageReference Include="StackExchange.Redis" Version="2.0.519" />
+    
   </ItemGroup>
  
 </Project>
