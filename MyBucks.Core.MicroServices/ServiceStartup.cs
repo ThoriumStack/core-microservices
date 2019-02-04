@@ -64,7 +64,7 @@ namespace MyBucks.Core.MicroServices
             _readyCheck = new ReadyCheckEndpoint();
             _readyCheck.StartServer();
 
-            _liveCheck = new LiveCheckEndpoint();
+            _liveCheck = new LiveCheckEndpoint(_liveCheckConfig);
             _liveCheck.StartServer();
 
             var endpointsSucceeded = _handlers.ToList().All(TryServiceStart);

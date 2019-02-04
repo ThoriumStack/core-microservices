@@ -42,6 +42,7 @@
         <e p="ConfigurationModels" t="Include">
           <e p="CustomLoggerConfiguration.cs" t="Include" />
           <e p="DbSettings.cs" t="Include" />
+          <e p="RabbitMqSettings.cs" t="Include" />
           <e p="RedisConfig.cs" t="Include" />
           <e p="WebServiceSettings.cs" t="Include" />
         </e>
@@ -57,6 +58,7 @@
         <e p="LivenessChecks" t="Include">
           <e p="DatabaseLivenessCheck.cs" t="Include" />
           <e p="LivenessCheckConfiguration.cs" t="Include" />
+          <e p="RabbitMqLivenessCheck.cs" t="Include" />
         </e>
         <e p="Mappers" t="Include">
           <e p="MapperExtensions.cs" t="Include" />
