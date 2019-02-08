@@ -51,7 +51,9 @@ namespace MyBucks.Core.MicroServices.Repositories
                     CurrentDbContext.CurrentContext = _currentContext;
             }
         }
-        
+
+        public int CurrentTimeZoneOffset { get; set; }
+
         public virtual ContextBase CurrentDbContext { get; set; }
 
         public event EventHandler<PreFilterEventArgs> PreFilter = delegate { };

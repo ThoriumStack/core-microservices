@@ -14,6 +14,7 @@ namespace MyBucks.Core.MicroServices.Abstractions
     {
         string CurrentUserId { get; set; }
         string CurrentContext { get; set; }
+        int CurrentTimeZoneOffset { get; set; }
         ContextBase CurrentDbContext { get; set; }
 
         event EventHandler<PreFilterEventArgs> PreFilter;

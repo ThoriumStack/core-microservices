@@ -48,7 +48,21 @@ namespace MyBucks.Core.MicroServices.Services
                 _services?.ToList().ForEach(x => x.CurrentContext = _currentContext);
             }
         }
+
         
+        private int _currentTimeZoneOffset;
+
+        public int CurrentTimeZoneOffset
+        {
+            get => _currentTimeZoneOffset;
+            set
+            {
+                _currentTimeZoneOffset = value;
+                _repositories?.ToList().ForEach(x => x.CurrentTimeZoneOffset = _currentTimeZoneOffset);
+                _services?.ToList().ForEach(x => x.CurrentTimeZoneOffset = _currentTimeZoneOffset);
+            }
+        }
+
         protected T ReplyFromFatal<T>(Exception ex, string msg) where T : ReplyBase, new()
         {
             return ReplyFromFatal<T>(ex, msg, null);
