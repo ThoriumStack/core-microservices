@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="8.0.0" />
-    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.3.1" />
+    <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.3.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
@@ -12,16 +12,16 @@
     <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
     <PackageReference Include="MyBucks.Core.DataIntegration" Version="1.0.25" />
     <PackageReference Include="MyBucks.Core.DataProvider" Version="2.0.1" />
-    <PackageReference Include="MyBucks.Core.Defensive" Version="1.0.3" />
     <PackageReference Include="MyBucks.Core.MessageQueue" Version="1.0.17" />
     <PackageReference Include="MyBucks.Core.Serializers.CsvSerializer" Version="1.0.12" />
-    <PackageReference Include="Polly" Version="6.1.2" />
+    <PackageReference Include="Polly" Version="7.0.2" />
     <PackageReference Include="Serilog" Version="2.8.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.ElasticSearch" Version="6.5.0" />
     <PackageReference Include="SimpleInjector" Version="4.4.3" />
     <PackageReference Include="StackExchange.Redis" Version="2.0.519" />
+    <PackageReference Include="Thorium.FluentDefense" Version="1.0.7" />
     
   </ItemGroup>
   <ItemGroup>
