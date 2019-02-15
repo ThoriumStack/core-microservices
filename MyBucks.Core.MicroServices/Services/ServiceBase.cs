@@ -91,6 +91,7 @@ namespace MyBucks.Core.MicroServices.Services
             else
             {
                 _logger.Fatal(ex, msg, parmList);
+                val.ReplyStatus = ReplyStatus.Failed;
                 val.ReplyMessage = $"{msg} Error Id: {errorId}";
             }
 
