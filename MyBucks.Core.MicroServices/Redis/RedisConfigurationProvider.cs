@@ -24,6 +24,8 @@ namespace MyBucks.Core.MicroServices.Redis
             _source = source;
             _redisConfigurationClient = client;
 
+          
+            
             if (!_source.RedisConfig.Upload && source.ReloadOnChange && source.FileProvider != null)
             {
                 ChangeToken.OnChange(

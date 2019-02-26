@@ -163,6 +163,10 @@ namespace MyBucks.Core.MicroServices
                     options.ReloadOnChange = true;
                     options.OnReload = () =>
                     {
+                        if (!(_readyCheck?.Ready ?? false))
+                        {
+                            return;
+                        }
                         Console.WriteLine($"Settings have been updated...");
                         _logger?.Information($"Settings have been updated...");
                         StopServices();
