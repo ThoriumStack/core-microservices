@@ -22,13 +22,11 @@ namespace DummyService
         public void ConfigureService(ServiceConfiguration configuration)
         {
             configuration.AddServiceEndpoint<DummyEndpoint>();
-          //  configuration.Inject<ILivenessCheck, DatabaseLivenessCheck<PoefDbContext>>();
             
         }
 
         public void ConfigureLivenessChecks(LivenessCheckConfiguration config)
         {
-           // config.AddCheck< DatabaseLivenessCheck<PoefDbContext>>();
             config.AddCheck<ExampleLiveCheck>();
         }
     }
