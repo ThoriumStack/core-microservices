@@ -1,8 +1,7 @@
-﻿using System;
-using System.Threading;
-using MyBucks.Core.MicroServices;
-using MyBucks.Core.MicroServices.Abstractions;
-using MyBucks.Core.MicroServices.LivenessChecks;
+﻿using System.Threading;
+using Thorium.Core.MicroServices;
+using Thorium.Core.MicroServices.Abstractions;
+using Thorium.Core.MicroServices.LivenessChecks;
 
 namespace DummyService
 {

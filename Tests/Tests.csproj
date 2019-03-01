@@ -10,6 +10,6 @@
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MyBucks.Core.MicroServices\MyBucks.Core.MicroServices.csproj" />
+    <ProjectReference Include="..\Thorium.Core.MicroServices\Thorium.Core.MicroServices.csproj" />
   </ItemGroup>
 </Project>

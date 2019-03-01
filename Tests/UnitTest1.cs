@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using MyBucks.Core.MicroServices.ConfigurationModels;
+using Thorium.Core.MicroServices.ConfigurationModels;
 using Xunit;
 
 namespace Tests
