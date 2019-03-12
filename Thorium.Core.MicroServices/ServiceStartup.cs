@@ -167,6 +167,7 @@ namespace Thorium.Core.MicroServices
                         {
                             return;
                         }
+
                         Console.WriteLine($"Settings have been updated...");
                         _logger?.Information($"Settings have been updated...");
                         StopServices();
@@ -175,8 +176,8 @@ namespace Thorium.Core.MicroServices
                     };
                 });
             }
-            else
-                builder.AddJsonFile(AppSettingsLocation, optional: false, reloadOnChange: true);
+
+            builder.AddJsonFile(AppSettingsLocation, optional: false, reloadOnChange: false);
 
             _configuration = builder.Build();
 
