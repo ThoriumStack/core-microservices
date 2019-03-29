@@ -1,4 +1,5 @@
 using RabbitMQ.Client;
+using Thorium.Core.MessageQueue.ConfigurationModel;
 using Thorium.Core.MicroServices.Abstractions;
 using Thorium.Core.MicroServices.ConfigurationModels;
 
